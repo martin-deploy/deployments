@@ -75,12 +75,15 @@ argo-cd:
 
     # Repositories list to be used by applications
     # Creates a secret for each key/value specified below to create repositories
-    # Note: the last example in the list would use a repository credential template, configured under "configs.repositoryCredentials".
     repositories:
-      # istio-helm-repo:
-      #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
-      #   name: istio.io
-      #   type: helm
+      app-1:            { name: app-1,            type: git, url: https://github.com/orgs/martin-deploy/app-1.git            }
+      app-2-code:       { name: app-2-code,       type: git, url: https://github.com/orgs/martin-deploy/app-2-code.git       }
+      app-2-deployment: { name: app-2-deployment, type: git, url: https://github.com/orgs/martin-deploy/app-2-deployment.git }
+      app-2-dockerfile: { name: app-2-dockerfile, type: git, url: https://github.com/orgs/martin-deploy/app-2-dockerfile.git }
+      app-2-pipeline:   { name: app-2-pipeline,   type: git, url: https://github.com/orgs/martin-deploy/app-2-pipeline.git   }
+      deployments:      { name: deployments,      type: git, url: https://github.com/orgs/martin-deploy/deployments.git      }
+      dockerfiles:      { name: dockerfiles,      type: git, url: https://github.com/orgs/martin-deploy/dockerfiles.git      }
+      pipelines:        { name: pipelines,        type: git, url: https://github.com/orgs/martin-deploy/pipelines.git        }
 
     secret: # Argo CD sensitive data: Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#sensitive-data-and-sso-client-secrets
       createSecret: true
@@ -93,10 +96,7 @@ argo-cd:
       enabled: false
 
   dex:
-    enabled: true
-    serviceAccount:
-      create: true
-      automountServiceAccountToken: true
+    enabled: false
 
   redis:
     enabled: true
@@ -203,7 +203,7 @@ argo-cd:
 
     rbac: # Repo server rbac rules
       - apiGroups: [argoproj.io]
-        resources: [applications]
+        resources: [applications, projects]
         verbs: [get, list, watch]
 
   applicationSet: # ApplicationSet controller

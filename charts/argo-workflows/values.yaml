@@ -22,7 +22,7 @@ argo-workflows:
 
   workflow:
     serviceAccount:
-      create: false
+      create: true
 
     rbac:
       # Adds Role and RoleBinding for the above specified service account to be able to run workflows.
@@ -95,6 +95,8 @@ argo-workflows:
     # See the following documentation for more details on secure mode:
     # https://argoproj.github.io/argo-workflows/tls/
     secure: false
+
+    serviceType: LoadBalancer
 
     ingress: # Ingress configuration: https://kubernetes.io/docs/user-guide/ingress/
       enabled: false

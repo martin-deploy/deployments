@@ -82,6 +82,9 @@ argo-workflows:
   server:
     enabled: true # Deploy the Argo Server
 
+    extraArgs:
+      - --auth-mode=server
+
     rbac:
       create: true # Adds Role and RoleBinding for the server.
 

@@ -24,7 +24,7 @@ data:
       # Error output will be sent to the UI, so avoid printing sensitive information (such as secrets).
       generate:
         command: [ash]
-        args: # [-c, ts-node .]
+        args: [-c, ts-node .]
 
       # The parameters config describes what parameters the UI should display for an Application. It is up to the user to
       # actually set parameters in the Application manifest (in spec.source.plugin.parameters). The announcements _only_

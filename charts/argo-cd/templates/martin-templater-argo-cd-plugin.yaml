@@ -11,8 +11,6 @@ data:
     metadata:
       name: martin-templater # The name of the plugin must be unique within a given Argo CD instance.
     spec:
-      version: 0.1.0
-
       # The init command runs in the Application source directory at the beginning of each manifest generation. The init
       # command can output anything. A non-zero status code will fail manifest generation.
       init:

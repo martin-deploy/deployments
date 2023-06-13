@@ -1,0 +1,16 @@
+# Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/project.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: internal
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Finalizer that ensures that project is not deleted until it is not referenced by any application
+spec:
+  sourceRepos: # Only permit applications to deploy from Martin Deploy repositories
+    - https://github.com/martin-deploy/*
+
+  destinations: # Only permit applications to deploy to certain namespaces in the cluster
+    - { name: in-cluster, namespace: argo-cd        } # Where Argo CD is installed, and the Argo projects and applications live
+    - { name: in-cluster, namespace: argo-workflows } # Where Argo Workflows is installed, and the Argo workflow templates and runs live
+    - { name: in-cluster, namespace: argo-events    } # Where Argo Events is installed
+    - { name: in-cluster, namespace: martin-prod    } # Where the applications pods are deployed

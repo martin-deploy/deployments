@@ -45,19 +45,7 @@ argo-cd:
       create: true
 
     cmp: # ConfigMap for Config Management Plugins: https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/
-      create: false
-      # plugins: # Plugin yaml files to be added to argocd-cmp-cm
-        # martin-templater:
-          # generate:
-            # command: [sh, -c]
-            # args:
-              # - |
-                # echo "{\"kind\": \"ConfigMap\", \"apiVersion\": \"v1\", \"metadata\": { \"name\": \"$ARGOCD_APP_NAME\", \"namespace\": \"$ARGOCD_APP_NAMESPACE\", \"annotations\": {\"Foo\": \"$ARGOCD_ENV_FOO\", \"KubeVersion\": \"$KUBE_VERSION\", \"KubeApiVersion\": \"$KUBE_API_VERSIONS\",\"Bar\": \"baz\"}}}"
-          # discover:
-            # fileName: "./subdir/s*.yaml"
-            # find:
-              # glob: "**/Chart.yaml"
-              # command: [sh, -c, find . -name env.yaml]
+      create: false # ConfigMap-based plugins are deprecated.
 
     # Provide one or multiple [external cluster credentials]
     # https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
@@ -156,47 +144,29 @@ argo-cd:
     # Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
     # Note: Supports use of custom Helm templates
     extraContainers:
-      []
-      # - name: cmp-my-plugin
-      #   command:
-      #     - "/var/run/argocd/argocd-cmp-server"
-      #   image: busybox
-      #   securityContext:
-      #     runAsNonRoot: true
-      #     runAsUser: 999
-      #   volumeMounts:
-      #     - mountPath: /var/run/argocd
-      #       name: var-files
-      #     - mountPath: /home/argocd/cmp-server/plugins
-      #       name: plugins
-      #     # Remove this volumeMount if you've chosen to bake the config file into the sidecar image.
-      #     - mountPath: /home/argocd/cmp-server/config/plugin.yaml
-      #       subPath: my-plugin.yaml
-      #       name: argocd-cmp-cm
-      #     # Starting with v2.4, do NOT mount the same tmp volume as the repo-server container. The filesystem separation helps
-      #     # mitigate path traversal attacks.
-      #     - mountPath: /tmp
-      #       name: cmp-tmp
-      # - name: cmp-my-plugin2
-      #   command:
-      #     - "/var/run/argocd/argocd-cmp-server"
-      #   image: busybox
-      #   securityContext:
-      #     runAsNonRoot: true
-      #     runAsUser: 999
-      #   volumeMounts:
-      #     - mountPath: /var/run/argocd
-      #       name: var-files
-      #     # Remove this volumeMount if you've chosen to bake the config file into the sidecar image.
-      #     - mountPath: /home/argocd/cmp-server/plugins
-      #       name: plugins
-      #     - mountPath: /home/argocd/cmp-server/config/plugin.yaml
-      #       subPath: my-plugin2.yaml
-      #       name: argocd-cmp-cm
-      #     # Starting with v2.4, do NOT mount the same tmp volume as the repo-server container. The filesystem separation helps
-      #     # mitigate path traversal attacks.
-      #     - mountPath: /tmp
-      #       name: cmp-tmp
+      - name: martin-templater
+        image: ghcr.io/martin-deploy/martin-alpine-templater:0.1.0
+        command: [/var/run/argocd/argocd-cmp-server]
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files # Provided by Argo CD
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins # Provided by Argo CD
+          - mountPath: /tmp
+            name: martin-templater-tmp
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            name: martin-templater-plugin-config
+            subPath: plugin
+
+    volumes:
+      - name: martin-templater-tmp
+        emptyDir: {}
+      - name: martin-templater-plugin-config
+        configMap:
+          name: martin-templater-argo-cd-plugin
 
     # Repo server service account
     # If create is set to true, make sure to uncomment the name and update the rbac section below

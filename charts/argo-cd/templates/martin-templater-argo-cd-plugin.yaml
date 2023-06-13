@@ -25,9 +25,6 @@ data:
       generate:
         command: [ash]
         args: # [-c, ts-node .]
-          - -c
-          - |-
-            echo "{\"kind\": \"ConfigMap\", \"apiVersion\": \"v1\", \"metadata\": { \"name\": \"$ARGOCD_APP_NAME\", \"namespace\": \"$ARGOCD_APP_NAMESPACE\", \"annotations\": {\"PWD\": \"$(pwd)\", \"KubeVersion\": \"$KUBE_VERSION\", \"KubeApiVersion\": \"$KUBE_API_VERSIONS\",\"Bar\": \"baz\"}}}"
 
       # The parameters config describes what parameters the UI should display for an Application. It is up to the user to
       # actually set parameters in the Application manifest (in spec.source.plugin.parameters). The announcements _only_

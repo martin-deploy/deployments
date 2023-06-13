@@ -14,3 +14,11 @@ spec:
     - { name: in-cluster, namespace: argo-workflows } # Where Argo Workflows is installed, and the Argo workflow templates and runs live
     - { name: in-cluster, namespace: argo-events    } # Where Argo Events is installed
     - { name: in-cluster, namespace: martin-prod    } # Where the applications pods are deployed
+
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

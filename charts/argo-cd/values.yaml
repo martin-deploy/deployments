@@ -140,6 +140,9 @@ argo-cd:
     autoscaling:
       enabled: false
 
+    imagePullSecrets:
+      - name: martin-auth-ghcr
+
     # Additional containers to be added to the repo server pod
     # Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/config-management-plugins/
     # Note: Supports use of custom Helm templates

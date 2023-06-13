@@ -1,4 +1,5 @@
 # Ref: https://github.com/argoproj/argo-cd
+# Ref: https://github.com/argoproj/argo-helm/blob/main/charts/argo-cd/values.yaml
 
 global:
   revisionHistoryLimit: 1 # Number of old deployment ReplicaSets to retain. The rest will be garbage collected.
@@ -125,6 +126,9 @@ argo-cd:
     serviceAccount:
       create: true
       automountServiceAccountToken: true
+
+    service:
+      type: LoadBalancer
 
     ingress:
       enabled: false

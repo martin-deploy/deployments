@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/martin-deploy/pipelines.git
     targetRevision: master
-    path: ""
+    path: "."
     directory:
       recurse: true
       include: "{*.yaml,*.yml}"

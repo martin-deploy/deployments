@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: martin-templater-argo-cd-plugin
 data:
-  plugin:
+  plugin: |-
     # While the ConfigManagementPlugin looks like a Kubernetes object, it is not actually a custom resource. It only follows kubernetes-style spec conventions.
     # Argo CD expects the plugin configuration file to be located at /home/argocd/cmp-server/config/plugin.yaml in the sidecar.
     apiVersion: argoproj.io/v1alpha1

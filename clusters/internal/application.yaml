@@ -3,6 +3,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: internal
+  labels:
+    martin-deploy/cluster-app: ""
   finalizers:
     - resources-finalizer.argocd.argoproj.io # Add this finalizer ONLY if you want these to cascade delete.
 spec:

@@ -148,7 +148,7 @@ argo-cd:
     # Note: Supports use of custom Helm templates
     extraContainers:
       - name: martin-templater
-        image: ghcr.io/martin-deploy/martin-alpine-templater:0.1.0
+        image: ghcr.io/martin-deploy/martin-alpine-templater:0.1.1
         command: [/var/run/argocd/argocd-cmp-server]
         securityContext:
           runAsNonRoot: true

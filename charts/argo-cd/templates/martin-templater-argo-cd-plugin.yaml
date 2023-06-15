@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: martin-templater-argo-cd-plugin
 data:
-  plugin: |-
+  plugin:
     # While the ConfigManagementPlugin looks like a Kubernetes object, it is not actually a custom resource. It only follows kubernetes-style spec conventions.
     # Argo CD expects the plugin configuration file to be located at /home/argocd/cmp-server/config/plugin.yaml in the sidecar.
     apiVersion: argoproj.io/v1alpha1
@@ -24,7 +24,16 @@ data:
       # Error output will be sent to the UI, so avoid printing sensitive information (such as secrets).
       generate:
         command: [ash]
-        args: [-c, ts-node .]
+        args:
+          - -c
+          - ts-node $(
+              grep -E '"main":\s*"[^"]+"' -m 1 -o package.json 2>/dev/null |
+              cut -d '"' -f 4 |
+              (read -r X &&
+                echo $X ||
+                (echo 'Missing field "main" in file "package.json".'; exit 1)
+              )
+            )
 
       # The parameters config describes what parameters the UI should display for an Application. It is up to the user to
       # actually set parameters in the Application manifest (in spec.source.plugin.parameters). The announcements _only_

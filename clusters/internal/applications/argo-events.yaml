@@ -1,0 +1,33 @@
+# Ref: https://argo-cd.readthedocs.io/en/stable/operator-manual/application.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-events
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io # Add this finalizer ONLY if you want these to cascade delete.
+spec:
+  project: internal
+
+  source:
+    repoURL: https://github.com/martin-deploy/deployments.git
+    targetRevision: master
+    path: charts/argo-events
+    helm:
+      releaseName: argo-events
+      ignoreMissingValueFiles: false
+      valueFiles:
+        - values.yaml
+
+  destination: # Destination cluster and namespace to deploy the application
+    name: in-cluster
+    namespace: argo-events
+
+  syncPolicy:
+    automated:
+      prune: true # Specifies if resources should be pruned during auto-syncing.
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected.
+      allowEmpty: true # Allows deleting all application resources during automatic syncing.
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
+      - PruneLast=true # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation

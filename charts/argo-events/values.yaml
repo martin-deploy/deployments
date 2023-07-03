@@ -2,7 +2,6 @@ global:
   imagePullSecrets: [] # If defined, uses a Secret to pull an image from a private Docker registry or repository
 
 argo-events:
-
   # Create clusterroles that extend existing clusterroles to interact with argo-events crds
   # Only applies for cluster-wide installation (`controller.rbac.namespaced: false`)
   # Ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
@@ -25,7 +24,6 @@ argo-events:
         # Total size of messages before expiring oldest message, 0 means unlimited.
         maxBytes: 1GB
         replicas: 3 # Number of replicas, defaults to 3 and requires minimal 3
-        duplicates: 300s # Not documented at the moment
       # Supported versions of JetStream eventbus
       versions:
         - version: "latest"
